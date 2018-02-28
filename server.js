@@ -15,7 +15,7 @@ app.use(cors()); // Allows access from multiple soirces with no validation.
 
 // Sets up out first query to get our book data
 app.get('/api/v1/books', (request, response) => {
-  client.query(`SELECT book_id title, author, img_url, isbn, word_count FROM books;`)
+  client.query(`SELECT title, author, image_url, isbn, page_count FROM books;`)
     .then(results => response.send(results.rows))
     .catch(console.log);
 });
