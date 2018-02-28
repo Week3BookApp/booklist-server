@@ -13,6 +13,10 @@ client.connect();
 
 app.use(cors());
 
-app.get('/', (req,res) => res.send('Testing 1, 2, 3'));
-
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+
+app.get('/api.v1/books', (request, response) => {
+  client.query('SELECT * FROM books;')
+    .then(result => response.send(result.rows))
+    .catch(console.error);
+});
