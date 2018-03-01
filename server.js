@@ -28,7 +28,7 @@ app.get('/api/v1/books/:id', (request, response) => {
 });
 
 app.post('/api/v1/books/', bodyParser, (request, response) => {
-  client.query(`INSERT INTO books (title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);`
+  client.query(`INSERT INTO books(title, author, isbn, image_url, description)VALUES($1, $2, $3, $4, $5);`
     [
       request.body.title,
       request.body.author,
