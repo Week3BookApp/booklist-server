@@ -28,7 +28,8 @@ app.get('/api/v1/books/:id', (request, response) => {
 });
 
 app.post('/api/v1/books/', bodyParser, (request, response) => {
-  client.query(`INSERT INTO books (title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);`
+  console.log(request.body);
+  client.query(`INSERT INTO books (title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);`,
     [
       request.body.title,
       request.body.author,
@@ -36,24 +37,25 @@ app.post('/api/v1/books/', bodyParser, (request, response) => {
       request.body.image_url,
       request.body.description
     ])
-    .then(() => response.send('Update Complete'))
+    .then(() => response.sendStatus('Update Complete'))
     .catch(console.error);
 });
 
-app.put('/api/v1/books/:id', bodyParser, (request, response) => { //added in lab 13 for book update
-  client.query(`UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5;`
+app.put('/api/v1/books/', bodyParser, (request, response) => { //added for book update
+  client.query(`UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5; WHERE id=$6`
     [
       request.body.title,
       request.body.author,
       request.body.isbn,
       request.body.image_url,
-      request.body.description
+      request.body.description,
+      request.body.id
     ])
     .then(() => response.send('Update Complete'))
     .catch(console.error);
 });
 
-app.delete('/api/v1/books/:id', (request, response) =>{ //added in lab 13 for book delete
+app.delete('/api/v1/books/:id', (request, response) =>{ //added for book delete
   client.query(`DELETE FROM books WHERE id=${request.params.id};`)
     .then(() => response.send('Delete complete'))
     .catch(console.error);
