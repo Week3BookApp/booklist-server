@@ -12,7 +12,7 @@ const CLIENT_URL = process.env.CLIENT_URL;
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 
-app.use(cors()); // Allows access from multiple soirces with no validation.
+app.use(cors()); // Allows access from multiple sources with no validation.
 
 // Sets up out first query to get our book data
 app.get('/api/v1/books', (request, response) => {
@@ -28,9 +28,35 @@ app.get('/api/v1/books/:id', (request, response) => {
 });
 
 app.post('/api/v1/books/', bodyParser, (request, response) => {
-  client.query(`INSERT INTO books (title, author, isbn) VALUES ($1, $2, $3)` [request.body.title])
-  // take the data that was sent over and insert it into the database
-  console.log(request.body);
+  client.query(`INSERT INTO books (title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);`
+    [
+      request.body.title,
+      request.body.author,
+      request.body.isbn,
+      request.body.image_url,
+      request.body.description
+    ])
+    .then(() => response.send('Update Complete'))
+    .catch(console.error);
+});
+
+app.put('/api/v1/books/:id', bodyParser, (request, response) => { //added in lab 13 for book update
+  client.query(`UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5;`
+    [
+      request.body.title,
+      request.body.author,
+      request.body.isbn,
+      request.body.image_url,
+      request.body.description
+    ])
+    .then(() => response.send('Update Complete'))
+    .catch(console.error);
+});
+
+app.delete('/api/v1/books/:id', (request, response) =>{ //added in lab 13 for book delete
+  client.query(`DELETE FROM books WHERE id=${request.params.id};`)
+    .then(() => response.send('Delete complete'))
+    .catch(console.error);
 });
 
 app.get('*', (request, response) => response.redirect(CLIENT_URL)); // Catch all for any other route to redirect to the home page.
