@@ -3,7 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const pg = require('pg');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser').urlencoded({extended: true});
 
 const app = express();
 const PORT = process.env.PORT;
@@ -27,9 +27,9 @@ app.get('/api/v1/books/:id', (request, response) => {
     .catch(console.log);
 });
 
-app.post('/api/v1/books/', bodyParser, (request, response) => {
+app.post('/api/v1/books', bodyParser, (request, response) => {
   console.log(request.body);
-  client.query(`INSERT INTO books (title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);`,
+  client.query(`INSERT INTO books(title, author, isbn, image_url, description) VALUES($1, $2, $3, $4, $5);`,
     [
       request.body.title,
       request.body.author,
@@ -37,12 +37,12 @@ app.post('/api/v1/books/', bodyParser, (request, response) => {
       request.body.image_url,
       request.body.description
     ])
-    .then(() => response.sendStatus('Update Complete'))
+    .then(() => response.send('Update Complete'))
     .catch(console.error);
 });
 
-app.put('/api/v1/books/', bodyParser, (request, response) => { //added for book update
-  client.query(`UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5; WHERE id=$6`
+app.put('/api/v1/books', bodyParser, (request, response) => { //added for book update
+  client.query(`UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5; WHERE id=$6`,
     [
       request.body.title,
       request.body.author,
