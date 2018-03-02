@@ -42,6 +42,7 @@ app.post('/api/v1/books', bodyParser, (request, response) => {
 });
 
 app.put('/api/v1/books', bodyParser, (request, response) => { //added for book update
+  console.log('in insert');
   client.query(`UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5; WHERE id=$6`,
     [
       request.body.title,
