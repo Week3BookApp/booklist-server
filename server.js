@@ -54,11 +54,17 @@ app.put('/api/v1/books/:id', bodyParser, (request, response) => {
     .catch(console.error);
 });
 
-app.delete('/api/v1/books/:id', (request, response) =>{ 
-  client.query(`DELETE FROM books WHERE id=${request.params.id};`)
+app.delete('/api/v1/books/:id', (request, response) => { 
+  client.query(`DELETE FROM books WHERE book_id=${request.params.id};`)
     .then(() => response.send('Delete complete'))
     .catch(console.error);
 });
+
+// app.delete('/api/v1/books/:id', (req, res) => {
+//   client.query('DELETE FROM books WHERE book_id=$1', [req.params.id])
+//   .then(() => res.sendStatus(204))
+//   .catch(console.error);
+// });
 
 app.get('*', (request, response) => response.redirect(CLIENT_URL));
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
